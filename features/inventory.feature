@@ -10,6 +10,19 @@ Feature: Agregar un producto al inventario
     When el usuario agrega un producto "Coffee"
     Then el inventario deberia contener "Coffee"
 
+  Scenario: List all products in the inventory
+    Given the inventory contains products:
+      | Product |
+      | Coffee  |
+      | Sugar   |
+    When the user lists all products
+    Then the output should contain:
+      """
+      Products:
+      - Coffee
+      - Sugar
+      """
+
 
 # ===========================================================================
 # Espacio para las demas features del equipo (5 features / 5 scenarios total)

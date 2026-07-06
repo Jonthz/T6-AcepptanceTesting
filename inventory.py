@@ -57,9 +57,14 @@ def find_product(inventory, nombre):
 # ---------------------------------------------------------------------------
 
 def list_products(inventory):
-    """Feature 2 - Listar productos (otro miembro)."""
-    # TODO: implementar
-    print("[Pendiente] Listar productos")
+    """Feature 2 - Lista todos los productos del inventario."""
+    if not inventory:
+        print("El inventario esta vacio")
+        return
+
+    print("Products:")
+    for producto in inventory:
+        print(f'- {producto["nombre"]}')
 
 
 def update_quantity(inventory, nombre, nueva_cantidad):
