@@ -77,10 +77,16 @@ def update_quantity(inventory, nombre, nueva_cantidad):
 
 
 def remove_product(inventory, nombre):
-    """Feature 4 - Eliminar producto (otro miembro)."""
-    # TODO: implementar
-    print("[Pendiente] Eliminar producto")
-    
+    """Feature 4 - Elimina un producto del inventario.
+
+    Retorna (ok, mensaje). El mensaje va en ingles para coincidir con el
+    escenario de interaccion fallida del enunciado ("Product Coffee was not found").
+    """
+    producto = find_product(inventory, nombre)
+    if producto is None:
+        return False, f"Product {nombre} was not found"
+    inventory.remove(producto)
+    return True, f"Product {nombre} was removed"
     
 def search_products(inventory, keyword):
     """Feature 5 - Busca productos que contengan la palabra clave en su nombre."""
@@ -95,6 +101,7 @@ def search_products(inventory, keyword):
             print(f"- {p['nombre']} (Stock: {p['cantidad']}, Precio: ${p['precio']}, Categoria: {p['categoria']})")
             
     return resultados
+    
 
 
 # ---------------------------------------------------------------------------

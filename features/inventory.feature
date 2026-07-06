@@ -29,7 +29,19 @@ Feature: Inventory Management
       | Coffee  | 10       |
     When the user updates product "Coffee" to quantity "25"
     Then the inventory should show product "Coffee" with quantity "25"
+    
+  Scenario: Remove a product from the inventory
+    Given the inventory contains products:
+      | Product |
+      | Coffee  |
+      | Sugar   |
+    When the user removes the product "Coffee"
+    Then the inventory should not contain "Coffee"
 
+  Scenario: Remove a product that does not exist
+    Given the inventory is empty
+    When the user removes the product "Coffee"
+    Then the output should be "Product Coffee was not found"
 
 
 
