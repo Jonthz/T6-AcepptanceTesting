@@ -1,2 +1,15 @@
-"venv/" 
-"__pycache__/" 
+# Local agent/tooling state
+.agents/
+
+# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Workshop reference files and generated notes
+AcceptanceTesting-2026.pdf
+AcceptanceTesting-2026.txt
+gemini-code-1783362957142 (1).md
