@@ -2,9 +2,7 @@
 Inventory Manager - Aplicacion de consola
 Software Engineering II - Acceptance Testing Workshop (I Term 2026)
 
-Base del proyecto y funcionalidad "Agregar producto" (Miembro 1).
-La estructura de datos definida aqui es la que usaran las demas features.
-
+Base del proyecto y funcionalidades integradas.
 Modelo de datos:
     El inventario es una lista de diccionarios.
     Cada producto tiene 4 atributos:
@@ -51,11 +49,6 @@ def find_product(inventory, nombre):
     return None
 
 
-# ---------------------------------------------------------------------------
-# Operaciones de las demas features (a cargo de otros miembros del equipo).
-# Se dejan como stubs para que el programa corra sin errores.
-# ---------------------------------------------------------------------------
-
 def list_products(inventory):
     """Feature 2 - Lista todos los productos del inventario."""
     if not inventory:
@@ -68,9 +61,19 @@ def list_products(inventory):
 
 
 def update_quantity(inventory, nombre, nueva_cantidad):
-    """Feature 3 - Actualizar cantidad (otro miembro)."""
-    # TODO: implementar
-    print("[Pendiente] Actualizar cantidad")
+    """Feature 3 - Actualiza la cantidad de un producto existente."""
+    producto = find_product(inventory, nombre)
+    
+    if not producto:
+        return False, f'El producto "{nombre}" no existe en el inventario'
+
+    try:
+        nueva_cantidad_int = int(nueva_cantidad)
+    except ValueError:
+        return False, "La cantidad debe ser un numero entero"
+
+    producto["cantidad"] = nueva_cantidad_int
+    return True, f'Cantidad de "{nombre}" actualizada a {nueva_cantidad_int}'
 
 
 def remove_product(inventory, nombre):
@@ -134,7 +137,8 @@ def menu():
         elif opcion == "3":
             nombre = input("Nombre del producto: ").strip()
             nueva = _leer_int("Nueva cantidad: ")
-            update_quantity(inventory, nombre, nueva)
+            ok, mensaje = update_quantity(inventory, nombre, nueva)
+            print(mensaje)
         elif opcion == "4":
             nombre = input("Nombre del producto: ").strip()
             remove_product(inventory, nombre)

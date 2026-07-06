@@ -10,7 +10,7 @@ sys.path.insert(
 )
 
 from behave import given, when, then  # noqa: E402
-from inventory import add_product, find_product, list_products  # noqa: E402
+from inventory import add_product, find_product, list_products, update_quantity 
 
 
 # ---------------------------------------------------------------------------
@@ -66,3 +66,24 @@ def step_impl(context):
 
     assert expected_output in actual_output, \
         f'Expected output to contain "{expected_output}" but got "{actual_output}"'
+
+
+# ---------------------------------------------------------------------------
+# Feature 3: Actualizar cantidad (Miembro 3)
+# ---------------------------------------------------------------------------
+
+@when('the user updates product "{product}" to quantity "{quantity}"')
+def step_impl(context, product, quantity):
+    ok, mensaje = update_quantity(context.inventory, product, quantity)
+    context.ok = ok
+    context.mensaje = mensaje
+
+
+@then('the inventory should show product "{product}" with quantity "{quantity}"')
+def step_impl(context, product, quantity):
+    producto = find_product(context.inventory, product)
+    
+    assert producto is not None, f'El producto "{product}" no se encontro'
+    
+    assert str(producto["cantidad"]) == str(quantity), \
+        f'Se esperaba cantidad {quantity} pero se obtuvo {producto["cantidad"]}'

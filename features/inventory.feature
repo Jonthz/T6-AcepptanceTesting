@@ -1,8 +1,8 @@
 # language: en
 
-Feature: Agregar un producto al inventario
+Feature: Inventory Management
   Como usuario del sistema de inventario
-  Quiero agregar productos
+  Quiero gestionar mis productos
   Para llevar el control de mi stock
 
   Scenario: Agregar un producto al inventario
@@ -23,12 +23,17 @@ Feature: Agregar un producto al inventario
       - Sugar
       """
 
+  Scenario: Update the quantity of a product
+    Given the inventory contains products:
+      | Product | Quantity |
+      | Coffee  | 10       |
+    When the user updates product "Coffee" to quantity "25"
+    Then the inventory should show product "Coffee" with quantity "25"
+
 
 # ===========================================================================
 # Espacio para las demas features del equipo (5 features / 5 scenarios total)
 # ---------------------------------------------------------------------------
-# Feature 2: Listar productos        -> Miembro 2
-# Feature 3: Actualizar cantidad     -> Miembro 3
 # Feature 4: Eliminar producto       -> Miembro 4
 # Feature 5: (feature extra)         -> Miembro 5
 # ===========================================================================
