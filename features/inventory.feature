@@ -31,6 +31,36 @@ Feature: Inventory Management
     Then the inventory should show product "Coffee" with quantity "25"
 
 
+
+
+
+# ===========================================================================
+# Funcionalidad 5: Buscar producto por nombre (Miembro 5)
+# ===========================================================================
+
+  Scenario: Filtrar productos que contienen una palabra especifica
+    Given the inventory contains products:
+      | Product      |
+      | Black Coffee |
+      | Sugar        |
+      | Iced Coffee  |
+    When el usuario busca la palabra "Coffee"
+    Then 2 productos coincidiran
+    And los nombres de los productos son:
+      | Product      |
+      | Black Coffee |
+      | Iced Coffee  |
+
+  Scenario: Buscar un producto que no existe (Interaccion fallida)
+    Given the inventory contains products:
+      | Product |
+      | Coffee  |
+      | Sugar   |
+    When el usuario busca la palabra "Tea"
+    Then 0 productos coincidiran
+    And el sistema muestra el mensaje "No se encontraron productos que coincidan con 'Tea'"
+    
+
 # ===========================================================================
 # Espacio para las demas features del equipo (5 features / 5 scenarios total)
 # ---------------------------------------------------------------------------

@@ -2,6 +2,7 @@ import os
 import sys
 from contextlib import redirect_stdout
 from io import StringIO
+from inventory import add_product, find_product, list_products, search_products 
 
 # Permite importar inventory.py (esta en la raiz del proyecto) desde los steps.
 sys.path.insert(
@@ -87,3 +88,46 @@ def step_impl(context, product, quantity):
     
     assert str(producto["cantidad"]) == str(quantity), \
         f'Se esperaba cantidad {quantity} pero se obtuvo {producto["cantidad"]}'
+        
+        
+
+
+# ---------------------------------------------------------------------------
+# Feature 5: Buscar producto (Miembro 5)
+# ---------------------------------------------------------------------------
+
+@when('el usuario busca la palabra "{keyword}"')
+def step_impl(context, keyword):
+    # Usamos StringIO para capturar lo que la funcion imprime en la consola
+    # Esto es vital para poder evaluar el mensaje de error en el escenario fallido
+    output = StringIO()
+    with redirect_stdout(output):
+        context.resultados = search_products(context.inventory, keyword)
+    
+    # Guardamos la salida impresa en el context para el ultimo 'Then'
+    context.output = output.getvalue().strip()
+
+@then('{cantidad} productos coincidiran')
+def step_impl(context, cantidad):
+    # Convertimos 'cantidad' a entero porque desde Gherkin llega como string
+    cantidad_esperada = int(cantidad)
+    cantidad_obtenida = len(context.resultados)
+    
+    assert cantidad_obtenida == cantidad_esperada, \
+        f"Se esperaban {cantidad_esperada} resultados, pero se obtuvieron {cantidad_obtenida}"
+
+@then('los nombres de los productos son:')
+def step_impl(context):
+    # Extraemos solo los nombres de los diccionarios encontrados
+    nombres_encontrados = [p['nombre'] for p in context.resultados]
+    
+    # Comparamos cada fila de la tabla de Gherkin con nuestra lista
+    for row in context.table:
+        nombre_esperado = row['Product']
+        assert nombre_esperado in nombres_encontrados, \
+            f"Se esperaba encontrar '{nombre_esperado}' en los resultados de busqueda"
+
+@then('el sistema muestra el mensaje "{mensaje}"')
+def step_impl(context, mensaje):
+    assert mensaje in context.output, \
+        f"Se esperaba el mensaje '{mensaje}', pero la consola mostro: '{context.output}'"

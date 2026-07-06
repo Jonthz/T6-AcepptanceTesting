@@ -80,6 +80,21 @@ def remove_product(inventory, nombre):
     """Feature 4 - Eliminar producto (otro miembro)."""
     # TODO: implementar
     print("[Pendiente] Eliminar producto")
+    
+    
+def search_products(inventory, keyword):
+    """Feature 5 - Busca productos que contengan la palabra clave en su nombre."""
+    # Filtra usando una comprension de listas y comparando en minusculas
+    resultados = [p for p in inventory if keyword.lower() in p["nombre"].lower()]
+    
+    if not resultados:
+        print(f"No se encontraron productos que coincidan con '{keyword}'")
+    else:
+        print(f"{len(resultados)} productos coinciden:")
+        for p in resultados:
+            print(f"- {p['nombre']} (Stock: {p['cantidad']}, Precio: ${p['precio']}, Categoria: {p['categoria']})")
+            
+    return resultados
 
 
 # ---------------------------------------------------------------------------
@@ -117,7 +132,7 @@ def menu():
         "2. Listar productos\n"
         "3. Actualizar cantidad\n"
         "4. Eliminar producto\n"
-        "5. (Feature extra)\n"
+        "5. Buscar producto\n"
         "0. Salir\n"
     )
 
@@ -143,7 +158,8 @@ def menu():
             nombre = input("Nombre del producto: ").strip()
             remove_product(inventory, nombre)
         elif opcion == "5":
-            print("[Pendiente] Feature extra")
+            keyword = input("Ingrese el nombre o palabra clave a buscar: ").strip()
+            search_products(inventory, keyword)
         elif opcion == "0":
             print("Hasta luego.")
             break
