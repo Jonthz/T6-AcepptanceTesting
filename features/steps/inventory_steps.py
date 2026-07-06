@@ -10,7 +10,7 @@ sys.path.insert(
 )
 
 from behave import given, when, then  # noqa: E402
-from inventory import add_product, find_product, list_products, update_quantity 
+from inventory import add_product, find_product, list_products, update_quantity, remove_product
 
 
 # ---------------------------------------------------------------------------
@@ -33,6 +33,31 @@ def step_impl(context, nombre):
 def step_impl(context, nombre):
     assert find_product(context.inventory, nombre) is not None, \
         f'El producto "{nombre}" no se encontro en el inventario'
+    
+# Feature 4: Eliminar un producto (Miembro 4)
+
+@given('the inventory is empty')
+def step_impl(context):
+    context.inventory = []
+
+
+@when('the user removes the product "{product}"')
+def step_impl(context, product):
+    ok, mensaje = remove_product(context.inventory, product)
+    context.ok = ok
+    context.output = mensaje
+
+
+@then('the inventory should not contain "{product}"')
+def step_impl(context, product):
+    assert find_product(context.inventory, product) is None, \
+        f'El producto "{product}" todavia esta en el inventario'
+
+
+@then('the output should be "{message}"')
+def step_impl(context, message):
+    assert context.output == message, \
+        f'Expected "{message}" but got "{context.output}"'
 
 
 # ---------------------------------------------------------------------------
