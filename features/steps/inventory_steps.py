@@ -2,7 +2,6 @@ import os
 import sys
 from contextlib import redirect_stdout
 from io import StringIO
-from inventory import add_product, find_product, list_products, search_products 
 
 # Permite importar inventory.py (esta en la raiz del proyecto) desde los steps.
 sys.path.insert(
@@ -11,7 +10,14 @@ sys.path.insert(
 )
 
 from behave import given, when, then  # noqa: E402
-from inventory import add_product, find_product, list_products, update_quantity, remove_product
+from inventory import (  # noqa: E402
+    add_product,
+    find_product,
+    list_products,
+    remove_product,
+    search_products,
+    update_quantity,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -34,31 +40,6 @@ def step_impl(context, nombre):
 def step_impl(context, nombre):
     assert find_product(context.inventory, nombre) is not None, \
         f'El producto "{nombre}" no se encontro en el inventario'
-    
-# Feature 4: Eliminar un producto (Miembro 4)
-
-@given('the inventory is empty')
-def step_impl(context):
-    context.inventory = []
-
-
-@when('the user removes the product "{product}"')
-def step_impl(context, product):
-    ok, mensaje = remove_product(context.inventory, product)
-    context.ok = ok
-    context.output = mensaje
-
-
-@then('the inventory should not contain "{product}"')
-def step_impl(context, product):
-    assert find_product(context.inventory, product) is None, \
-        f'El producto "{product}" todavia esta en el inventario'
-
-
-@then('the output should be "{message}"')
-def step_impl(context, message):
-    assert context.output == message, \
-        f'Expected "{message}" but got "{context.output}"'
 
 
 # ---------------------------------------------------------------------------
@@ -70,9 +51,16 @@ def step_impl(context):
     context.inventory = []
 
     for row in context.table:
+        cantidad = row.get("Quantity", 0)
+        precio = row.get("Price", 0.0)
+        categoria = row.get("Category", "General")
+
         ok, mensaje = add_product(
             context.inventory,
             row["Product"],
+            cantidad,
+            precio,
+            categoria,
         )
         assert ok, mensaje
 
@@ -108,13 +96,16 @@ def step_impl(context, product, quantity):
 @then('the inventory should show product "{product}" with quantity "{quantity}"')
 def step_impl(context, product, quantity):
     producto = find_product(context.inventory, product)
-    
+
     assert producto is not None, f'El producto "{product}" no se encontro'
-    
+
     assert str(producto["cantidad"]) == str(quantity), \
         f'Se esperaba cantidad {quantity} pero se obtuvo {producto["cantidad"]}'
-        
+
+
+# ---------------------------------------------------------------------------
 # Feature 4: Eliminar un producto (Miembro 4)
+# ---------------------------------------------------------------------------
 
 @given('the inventory is empty')
 def step_impl(context):
