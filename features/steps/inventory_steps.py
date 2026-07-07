@@ -2,7 +2,6 @@ import os
 import sys
 from contextlib import redirect_stdout
 from io import StringIO
-from inventory import add_product, find_product, list_products, search_products 
 
 # Permite importar inventory.py (esta en la raiz del proyecto) desde los steps.
 sys.path.insert(
@@ -11,7 +10,14 @@ sys.path.insert(
 )
 
 from behave import given, when, then  # noqa: E402
-from inventory import add_product, find_product, list_products, update_quantity, remove_product
+from inventory import (  # noqa: E402
+    add_product,
+    find_product,
+    list_products,
+    remove_product,
+    search_products,
+    update_quantity,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -70,9 +76,16 @@ def step_impl(context):
     context.inventory = []
 
     for row in context.table:
+        cantidad = row.get("Quantity", 0)
+        precio = row.get("Price", 0.0)
+        categoria = row.get("Category", "General")
+
         ok, mensaje = add_product(
             context.inventory,
             row["Product"],
+            cantidad,
+            precio,
+            categoria,
         )
         assert ok, mensaje
 

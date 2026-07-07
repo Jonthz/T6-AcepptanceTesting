@@ -63,7 +63,7 @@ def list_products(inventory):
 def update_quantity(inventory, nombre, nueva_cantidad):
     """Feature 3 - Actualiza la cantidad de un producto existente."""
     producto = find_product(inventory, nombre)
-    
+
     if not producto:
         return False, f'El producto "{nombre}" no existe en el inventario'
 
@@ -87,21 +87,21 @@ def remove_product(inventory, nombre):
         return False, f"Product {nombre} was not found"
     inventory.remove(producto)
     return True, f"Product {nombre} was removed"
-    
+
+
 def search_products(inventory, keyword):
     """Feature 5 - Busca productos que contengan la palabra clave en su nombre."""
     # Filtra usando una comprension de listas y comparando en minusculas
     resultados = [p for p in inventory if keyword.lower() in p["nombre"].lower()]
-    
+
     if not resultados:
         print(f"No se encontraron productos que coincidan con '{keyword}'")
     else:
         print(f"{len(resultados)} productos coinciden:")
         for p in resultados:
             print(f"- {p['nombre']} (Stock: {p['cantidad']}, Precio: ${p['precio']}, Categoria: {p['categoria']})")
-            
+
     return resultados
-    
 
 
 # ---------------------------------------------------------------------------
@@ -163,7 +163,8 @@ def menu():
             print(mensaje)
         elif opcion == "4":
             nombre = input("Nombre del producto: ").strip()
-            remove_product(inventory, nombre)
+            ok, mensaje = remove_product(inventory, nombre)
+            print(mensaje)
         elif opcion == "5":
             keyword = input("Ingrese el nombre o palabra clave a buscar: ").strip()
             search_products(inventory, keyword)

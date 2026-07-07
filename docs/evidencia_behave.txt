@@ -1,0 +1,69 @@
+USING RUNNER: behave.runner:Runner
+Feature: Inventory Management # features/inventory.feature:3
+  Como usuario del sistema de inventario
+  Quiero gestionar mis productos
+  Para llevar el control de mi stock
+  Scenario: Agregar un producto al inventario    # features/inventory.feature:8
+    Given el inventario esta vacio               # features/steps/inventory_steps.py:27
+    When el usuario agrega un producto "Coffee"  # features/steps/inventory_steps.py:32
+    Then el inventario deberia contener "Coffee" # features/steps/inventory_steps.py:39
+
+  Scenario: List all products in the inventory  # features/inventory.feature:13
+    Given the inventory contains products:      # features/steps/inventory_steps.py:74
+      | Product | Quantity | Price | Category |
+      | Coffee  | 10       | 2.50  | Drinks   |
+      | Sugar   | 5        | 1.20  | Grocery  |
+    When the user lists all products            # features/steps/inventory_steps.py:93
+    Then the output should contain:             # features/steps/inventory_steps.py:101
+      """
+      Products:
+      - Coffee
+      - Sugar
+      """
+
+  Scenario: Update the quantity of a product                           # features/inventory.feature:26
+    Given the inventory contains products:                             # features/steps/inventory_steps.py:74
+      | Product | Quantity |
+      | Coffee  | 10       |
+    When the user updates product "Coffee" to quantity "25"            # features/steps/inventory_steps.py:114
+    Then the inventory should show product "Coffee" with quantity "25" # features/steps/inventory_steps.py:121
+
+  Scenario: Remove a product from the inventory    # features/inventory.feature:33
+    Given the inventory contains products:         # features/steps/inventory_steps.py:74
+      | Product | Quantity | Price | Category |
+      | Coffee  | 10       | 2.50  | Drinks   |
+      | Sugar   | 5        | 1.20  | Grocery  |
+    When the user removes the product "Coffee"     # features/steps/inventory_steps.py:51
+    Then the inventory should not contain "Coffee" # features/steps/inventory_steps.py:58
+
+  Scenario: Remove a product that does not exist             # features/inventory.feature:41
+    Given the inventory is empty                             # features/steps/inventory_steps.py:46
+    When the user removes the product "Coffee"               # features/steps/inventory_steps.py:51
+    Then the output should be "Product Coffee was not found" # features/steps/inventory_steps.py:64
+
+  Scenario: Filtrar productos que contienen una palabra especifica  # features/inventory.feature:53
+    Given the inventory contains products:                          # features/steps/inventory_steps.py:74
+      | Product      | Quantity | Price | Category |
+      | Black Coffee | 4        | 3.75  | Drinks   |
+      | Sugar        | 5        | 1.20  | Grocery  |
+      | Iced Coffee  | 7        | 4.50  | Drinks   |
+    When el usuario busca la palabra "Coffee"                       # features/steps/inventory_steps.py:137
+    Then 2 productos coincidiran                                    # features/steps/inventory_steps.py:148
+    And los nombres de los productos son:                           # features/steps/inventory_steps.py:157
+      | Product      |
+      | Black Coffee |
+      | Iced Coffee  |
+
+  Scenario: Buscar un producto que no existe (Interaccion fallida)                          # features/inventory.feature:66
+    Given the inventory contains products:                                                  # features/steps/inventory_steps.py:74
+      | Product |
+      | Coffee  |
+      | Sugar   |
+    When el usuario busca la palabra "Tea"                                                  # features/steps/inventory_steps.py:137
+    Then 0 productos coincidiran                                                            # features/steps/inventory_steps.py:148
+    And el sistema muestra el mensaje "No se encontraron productos que coincidan con 'Tea'" # features/steps/inventory_steps.py:168
+
+1 feature passed, 0 failed, 0 skipped
+7 scenarios passed, 0 failed, 0 skipped
+23 steps passed, 0 failed, 0 skipped
+Took 0min 0.002s
