@@ -114,7 +114,30 @@ def step_impl(context, product, quantity):
     assert str(producto["cantidad"]) == str(quantity), \
         f'Se esperaba cantidad {quantity} pero se obtuvo {producto["cantidad"]}'
         
-        
+# Feature 4: Eliminar un producto (Miembro 4)
+
+@given('the inventory is empty')
+def step_impl(context):
+    context.inventory = []
+
+
+@when('the user removes the product "{product}"')
+def step_impl(context, product):
+    ok, mensaje = remove_product(context.inventory, product)
+    context.ok = ok
+    context.output = mensaje
+
+
+@then('the inventory should not contain "{product}"')
+def step_impl(context, product):
+    assert find_product(context.inventory, product) is None, \
+        f'El producto "{product}" todavia esta en el inventario'
+
+
+@then('the output should be "{message}"')
+def step_impl(context, message):
+    assert context.output == message, \
+        f'Expected "{message}" but got "{context.output}"'
 
 
 # ---------------------------------------------------------------------------
