@@ -12,9 +12,9 @@ Feature: Inventory Management
 
   Scenario: List all products in the inventory
     Given the inventory contains products:
-      | Product |
-      | Coffee  |
-      | Sugar   |
+      | Product | Quantity | Price | Category |
+      | Coffee  | 10       | 2.50  | Drinks   |
+      | Sugar   | 5        | 1.20  | Grocery  |
     When the user lists all products
     Then the output should contain:
       """
@@ -32,9 +32,9 @@ Feature: Inventory Management
     
   Scenario: Remove a product from the inventory
     Given the inventory contains products:
-      | Product |
-      | Coffee  |
-      | Sugar   |
+      | Product | Quantity | Price | Category |
+      | Coffee  | 10       | 2.50  | Drinks   |
+      | Sugar   | 5        | 1.20  | Grocery  |
     When the user removes the product "Coffee"
     Then the inventory should not contain "Coffee"
 
@@ -52,10 +52,10 @@ Feature: Inventory Management
 
   Scenario: Filtrar productos que contienen una palabra especifica
     Given the inventory contains products:
-      | Product      |
-      | Black Coffee |
-      | Sugar        |
-      | Iced Coffee  |
+      | Product      | Quantity | Price | Category |
+      | Black Coffee | 4        | 3.75  | Drinks   |
+      | Sugar        | 5        | 1.20  | Grocery  |
+      | Iced Coffee  | 7        | 4.50  | Drinks   |
     When el usuario busca la palabra "Coffee"
     Then 2 productos coincidiran
     And los nombres de los productos son:
